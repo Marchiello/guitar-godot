@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://db7m8xvaj0pvs"]
 
 [ext_resource type="Script" uid="uid://dwr2m5o3cdvm1" path="res://scenes/tela_inicial.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bj4xs0puialgb" path="res://assets/icon.png" id="2_icon"]
 
 [node name="TelaInicial" type="Control" unique_id=899526722]
 layout_mode = 3
@@ -27,15 +28,23 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -150.0
-offset_right = 300.0
-offset_bottom = 150.0
+offset_left = -379.0
+offset_top = -363.0
+offset_right = 1541.0
+offset_bottom = 1097.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.41319537, 0.41319537)
 theme_override_constants/separation = 40
 
+[node name="Icone" type="TextureRect" parent="VBoxContainer" unique_id=1042351941]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+texture = ExtResource("2_icon")
+stretch_mode = 5
+
 [node name="Title" type="Label" parent="VBoxContainer" unique_id=498921358]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.8, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)

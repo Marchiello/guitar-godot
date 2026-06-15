@@ -104,7 +104,6 @@ func _ready() -> void:
 		ui_instance = UI_SCENE.instantiate()
 		add_child(ui_instance)
 		
-		# Aplica a capa do álbum!
 		if ProgressoJogo and ProgressoJogo.info_fases.has(ProgressoJogo.fase_atual):
 			var fase_info = ProgressoJogo.info_fases[ProgressoJogo.fase_atual]
 			if fase_info.has("album") and ui_instance.has_method("set_album_cover"):
@@ -113,8 +112,19 @@ func _ready() -> void:
 	if not error_audio_player:
 		error_audio_player = AudioStreamPlayer.new()
 		# Dá pra ajustar o volume aqui se ficar muito alto (ex: -5.0)
-		error_audio_player.volume_db = 0.0
+		error_audio_player.volume_db = -5.0
 		add_child(error_audio_player)
+		
+	if ProgressoJogo and ProgressoJogo.fase_atual == 0:
+		var keys = ["a", "s", "j", "k", "l"]
+		for i in range(5):
+			if i < fret_buttons_nodes.size():
+				var spr = Sprite3D.new()
+				spr.texture = load("res://assets/kenney_input-prompts_1.5/Keyboard & Mouse/Default/keyboard_" + keys[i] + ".png")
+				spr.position = Vector3(0, 1.2, 0.5)
+				spr.pixel_size = 0.015
+				spr.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+				fret_buttons_nodes[i].add_child(spr)
 
 	if esteira_mesh and esteira_texture:
 		var malha_real: MeshInstance3D = null
@@ -176,6 +186,22 @@ func _process(delta: float) -> void:
 
 	check_note_spawns(game_clock)
 	update_active_notes(game_clock)
+	
+	if ProgressoJogo and ProgressoJogo.fase_atual == 0 and ui_instance and ui_instance.has_method("show_tutorial_text"):
+		if game_clock < -0.5:
+			ui_instance.show_tutorial_text("Prepare-se!\nColoque os dedos nas teclas A, S, J, K, L")
+		elif game_clock < 2.5:
+			ui_instance.show_tutorial_text("Notas Simples:\nAperte a tecla no momento exato em que a nota cruzar o botão!")
+		elif game_clock < 7.5:
+			ui_instance.show_tutorial_text("Notas Longas (Sustain):\nSegure a tecla sem soltar até o rastro luminoso acabar!")
+		elif game_clock < 11.5:
+			ui_instance.show_tutorial_text("Regra de Ouro: Errar 15 vezes SEGUIDAS dá Game Over!")
+		elif game_clock < 15.5:
+			ui_instance.show_tutorial_text("Mas basta acertar UMA nota\npara esse contador de Erros zerar na hora!")
+		elif game_clock < 25.5:
+			ui_instance.show_tutorial_text("Zigue-Zague!\nTeste sua coordenação motora para finalizar!")
+		else:
+			ui_instance.show_tutorial_text("Excelente!\nVocê está pronto para o Rock!")
 
 # ==========================================================
 
@@ -316,6 +342,10 @@ func increment_combo() -> void:
 
 func reset_combo() -> void:
 	if game_over_triggered: return
+	
+	if ProgressoJogo and ProgressoJogo.fase_atual == 0:
+		get_tree().reload_current_scene()
+		return
 	
 	consecutive_misses += 1
 	
@@ -505,4 +535,4 @@ func load_chart_file(path: String) -> void:
 		
 	# Ordena a fila cronologicamente para o motor do jogo não se perder
 	chart_notes_queue.sort_custom(func(a, b): return a["time"] < b["time"])
-	print("📂 [MATEMÁTICA CORRIGIDA] Notas na fila com tamanho real: ", chart_notes_queue.size())
+	#print("📂 [MATEMÁTICA CORRIGIDA] Notas na fila com tamanho real: ", chart_notes_queue.size())

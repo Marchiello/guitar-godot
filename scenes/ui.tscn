@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://d4f7asyxupmt2"]
+[gd_scene format=3 uid="uid://d4f7asyxupmt2"]
 
 [ext_resource type="Script" uid="uid://buauun7f48iqi" path="res://scenes/ui.gd" id="1_script"]
 
@@ -20,7 +20,7 @@ theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 48
 text = "Combo: 0"
 
-[node name="MetricsContainer" type="VBoxContainer" parent="."]
+[node name="MetricsContainer" type="VBoxContainer" parent="." unique_id=55095501]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -31,7 +31,7 @@ offset_bottom = -20.0
 grow_vertical = 0
 theme_override_constants/separation = 5
 
-[node name="HitsLabel" type="Label" parent="MetricsContainer"]
+[node name="HitsLabel" type="Label" parent="MetricsContainer" unique_id=262379669]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 1, 0.8, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -39,7 +39,7 @@ theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 24
 text = "Acertos: 0"
 
-[node name="WrongsLabel" type="Label" parent="MetricsContainer"]
+[node name="WrongsLabel" type="Label" parent="MetricsContainer" unique_id=925826593]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.6, 0.6, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -47,7 +47,7 @@ theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 24
 text = "Erros: 0"
 
-[node name="MissesLabel" type="Label" parent="MetricsContainer"]
+[node name="MissesLabel" type="Label" parent="MetricsContainer" unique_id=658744885]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -61,10 +61,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -250.0
-offset_top = -250.0
-offset_right = -50.0
-offset_bottom = -50.0
+offset_left = -783.0
+offset_top = -642.0
+offset_right = -583.0
+offset_bottom = -442.0
 grow_horizontal = 0
 grow_vertical = 0
 expand_mode = 1

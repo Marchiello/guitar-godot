@@ -54,3 +54,25 @@ func update_metrics(hits: int, wrongs: int, misses: int) -> void:
 	if hits_label: hits_label.text = "Acertos: " + str(hits)
 	if wrongs_label: wrongs_label.text = "Erros: " + str(wrongs)
 	if misses_label: misses_label.text = "Perdidas: " + str(misses)
+
+var tutorial_label: Label = null
+
+func show_tutorial_text(text: String) -> void:
+	if not tutorial_label:
+		tutorial_label = Label.new()
+		tutorial_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
+		tutorial_label.position = Vector2(0, 400)
+		tutorial_label.add_theme_font_size_override("font_size", 20)
+		tutorial_label.add_theme_color_override("font_color", Color(1, 1, 1))
+		tutorial_label.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+		tutorial_label.add_theme_constant_override("outline_size", 8)
+		tutorial_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		add_child(tutorial_label)
+		
+	tutorial_label.text = text
+	tutorial_label.visible = text != ""
+	
+	# Centralizar manualmente após setar texto
+	var vp = get_viewport()
+	if vp:
+		tutorial_label.position.x = (vp.get_visible_rect().size.x - tutorial_label.size.x) / 2
