@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://u0rhasw8nbkq"
-valid=false
+uid="uid://mjb4rtnne7xo"
+path="res://.godot/imported/album.webp-76c49a0e601a2a53852da77731562f36.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
-source_file="res://assets/songs/Aerials/album.png"
+source_file="res://assets/songs/Aerials/album.webp"
+dest_files=["res://.godot/imported/album.webp-76c49a0e601a2a53852da77731562f36.ctex"]
 
 [params]
 

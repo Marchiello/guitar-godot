@@ -8,9 +8,11 @@
 [ext_resource type="Texture2D" uid="uid://c2w4vppvrmne1" path="res://assets/Notes/orange_note.png" id="6_cmdn4"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ftu4q"]
+transparency = 1
+albedo_color = Color(0.6, 0.6, 0.6, 0.5)
 emission_enabled = true
-emission = Color(1, 1, 1, 1)
-emission_energy_multiplier = 3.2
+emission = Color(0.3, 0.3, 0.3, 1)
+emission_energy_multiplier = 0.5
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_spqmu"]
 material = SubResource("StandardMaterial3D_ftu4q")
@@ -24,6 +26,7 @@ textures = Array[Texture2D]([ExtResource("2_ftu4q"), ExtResource("3_spqmu"), Ext
 transform = Transform3D(0.51566184, 0, 0, 0, 0.1662898, 0.43135184, 0, -0.7822638, 0.09169462, 0, 0, 0)
 offset = Vector2(0, 125)
 axis = 1
+render_priority = 2
 texture = ExtResource("1_np0oh")
 
 [node name="PivotSustain" type="Node3D" parent="." unique_id=553543070]
@@ -32,3 +35,8 @@ transform = Transform3D(1, 0, 0, 0, 0.4612998, -0.88724464, 0, 0.88724464, 0.461
 [node name="MeshSustain" type="MeshInstance3D" parent="PivotSustain" unique_id=1933306343]
 transform = Transform3D(0.25, 0, 0, 0, 0.02, 0, 0, 0, 10.956734, 0, -0.019999921, 5.478368)
 mesh = SubResource("CylinderMesh_spqmu")
+
+[node name="OmniLight" type="OmniLight3D" parent="." unique_id=987654321]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+light_energy = 1.5
+omni_range = 3.0

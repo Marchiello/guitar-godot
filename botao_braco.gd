@@ -12,7 +12,7 @@ var is_pressed: bool = false
 func _ready() -> void:
 	if texture_inactive:
 		sprite.texture = texture_inactive
-	sprite.modulate = Color(1, 1, 1, 1)
+	sprite.modulate = Color(1.5, 1.5, 1.5, 1.0)
 
 func _input(event: InputEvent) -> void:
 	if input_action == "":
@@ -24,8 +24,8 @@ func _input(event: InputEvent) -> void:
 		set_visual_state(texture_active, 2.5) 
 	elif event.is_action_released(input_action):
 		is_pressed = false
-		# Volta para a textura inativa com cor normal (sem glow)
-		set_visual_state(texture_inactive, 1.0)
+		# Volta para a textura inativa mantendo o glow padrão de 1.5
+		set_visual_state(texture_inactive, 1.5)
 
 func set_visual_state(new_texture: Texture2D, glow_intensity: float) -> void:
 	if sprite and new_texture:

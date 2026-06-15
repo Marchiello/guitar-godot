@@ -24,6 +24,9 @@ var fret_buttons_nodes: Array[Node] = []
 var current_combo: int = 0
 var max_combo: int = 0
 var consecutive_misses: int = 0
+var total_hits: int = 0
+var wrong_hits: int = 0
+var missed_notes: int = 0
 
 var error_sounds: Array[AudioStream] = [
 	preload("res://assets/ErrorSongs/Error1.ogg"),
@@ -35,6 +38,9 @@ var error_audio_player: AudioStreamPlayer
 const UI_SCENE = preload("res://scenes/ui.tscn")
 const GAME_OVER_SCENE = preload("res://scenes/game_over.tscn")
 const VICTORY_SCENE = preload("res://scenes/victory.tscn")
+const PAUSE_SCENE = preload("res://scenes/pause_menu.tscn")
+
+var is_paused: bool = false
 var ui_instance: CanvasLayer
 var game_over_triggered: bool = false
 var victory_triggered: bool = false
@@ -88,12 +94,21 @@ func _ready() -> void:
 	current_combo = 0
 	max_combo = 0
 	consecutive_misses = 0
+	total_hits = 0
+	wrong_hits = 0
+	missed_notes = 0
 	game_over_triggered = false
 	victory_triggered = false
 	
 	if not ui_instance:
 		ui_instance = UI_SCENE.instantiate()
 		add_child(ui_instance)
+		
+		# Aplica a capa do álbum!
+		if ProgressoJogo and ProgressoJogo.info_fases.has(ProgressoJogo.fase_atual):
+			var fase_info = ProgressoJogo.info_fases[ProgressoJogo.fase_atual]
+			if fase_info.has("album") and ui_instance.has_method("set_album_cover"):
+				ui_instance.set_album_cover(fase_info["album"])
 		
 	if not error_audio_player:
 		error_audio_player = AudioStreamPlayer.new()
@@ -165,6 +180,14 @@ func _process(delta: float) -> void:
 # ==========================================================
 
 func _input(event: InputEvent) -> void:
+	if victory_triggered or game_over_triggered: return
+	
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_P or event.keycode == KEY_ESCAPE:
+			trigger_pause()
+			get_viewport().set_input_as_handled()
+			return
+			
 	for lane in range(5):
 		if event.is_action_pressed(lane_actions[lane]):
 			check_hit_attempt(lane)
@@ -192,6 +215,7 @@ func check_hit_attempt(lane: int) -> void:
 				
 	if not hit_something:
 		# Jogador apertou o botão na pista correta, mas não tinha nenhuma nota no tempo
+		wrong_hits += 1
 		reset_combo()
 
 # ==========================================================
@@ -203,11 +227,13 @@ func check_release_attempt(lane: int) -> void:
 				# Se soltou o botão antes do sustain acabar (com uma pequena margem de tolerância)
 				if game_clock < note.target_time + note.sustain_duration - hit_window:
 					note.drop_sustain()
+					missed_notes += 1
 					reset_combo()
 
 # ==========================================================
 
 func hit_note(note: Node3D) -> void:
+	total_hits += 1
 	increment_combo()
 	
 	if fret_buttons_nodes.size() > note.lane:
@@ -263,6 +289,7 @@ func update_active_notes(current_time: float) -> void:
 			# Checar miss por deixar passar
 			if not note.is_hit and not note.get_meta("missed", false) and current_time > note.target_time + hit_window:
 				note.set_meta("missed", true)
+				missed_notes += 1
 				reset_combo()
 		else:
 			active_notes.remove_at(i)
@@ -277,8 +304,15 @@ func increment_combo() -> void:
 	if current_combo > max_combo:
 		max_combo = current_combo
 		
+	var is_record = false
+	if ProgressoJogo:
+		if current_combo > ProgressoJogo.recordes_combo[ProgressoJogo.fase_atual]:
+			is_record = true
+		ProgressoJogo.atualizar_recorde(current_combo)
+		
 	if ui_instance:
-		ui_instance.update_combo(current_combo)
+		ui_instance.update_combo(current_combo, is_record)
+		ui_instance.update_metrics(total_hits, wrong_hits, missed_notes)
 
 func reset_combo() -> void:
 	if game_over_triggered: return
@@ -293,6 +327,7 @@ func reset_combo() -> void:
 	current_combo = 0
 	if ui_instance:
 		ui_instance.reset_combo()
+		ui_instance.update_metrics(total_hits, wrong_hits, missed_notes)
 			
 	if consecutive_misses >= 15:
 		trigger_game_over()
@@ -311,7 +346,30 @@ func trigger_victory() -> void:
 		ProgressoJogo.unlock_next_fase()
 		
 	var victory_modal = VICTORY_SCENE.instantiate()
+	if victory_modal.has_method("setup_metrics"):
+		victory_modal.setup_metrics(total_hits, wrong_hits, missed_notes, max_combo)
 	add_child(victory_modal)
+
+func trigger_pause() -> void:
+	if is_paused or victory_triggered or game_over_triggered:
+		return
+	is_paused = true
+	get_tree().paused = true
+	
+	if audio_player and audio_player.playing:
+		# AudioStreamPlayer pauses automatically when tree pauses if process_mode is inherit!
+		pass
+		
+	var pause_modal = PAUSE_SCENE.instantiate()
+	pause_modal.tree_exited.connect(_on_unpause)
+	add_child(pause_modal)
+
+func _on_unpause() -> void:
+	is_paused = false
+	var t = get_tree()
+	if t:
+		t.paused = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 
 # ==========================================================
 

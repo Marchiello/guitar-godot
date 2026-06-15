@@ -7,4 +7,10 @@
 script = ExtResource("1_h5ktf")
 
 [node name="Textura" type="Sprite3D" parent="." unique_id=1182019255]
+render_priority = 1
 texture = ExtResource("2_a3o4c")
+
+[node name="OmniLight" type="OmniLight3D" parent="." unique_id=135792468]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+light_energy = 3.0
+omni_range = 6.0

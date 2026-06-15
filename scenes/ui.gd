@@ -1,13 +1,22 @@
 extends CanvasLayer
 
 @onready var combo_label: Label = $ComboLabel
+@onready var album_rect: TextureRect = $AlbumRect
+@onready var hits_label: Label = $MetricsContainer/HitsLabel
+@onready var wrongs_label: Label = $MetricsContainer/WrongsLabel
+@onready var misses_label: Label = $MetricsContainer/MissesLabel
 
 func _ready() -> void:
 	# Define o pivot no centro para que a animação de pulo cresça a partir do meio
 	combo_label.pivot_offset = combo_label.size / 2
 
-func update_combo(current_combo: int) -> void:
+func update_combo(current_combo: int, is_record: bool = false) -> void:
 	combo_label.text = "Combo: " + str(current_combo)
+	
+	if is_record:
+		combo_label.add_theme_color_override("font_color", Color(0.5, 0.8, 1.0))
+	else:
+		combo_label.add_theme_color_override("font_color", Color(1, 0.8, 0, 1))
 	
 	var should_jump = false
 	if current_combo > 0:
@@ -34,3 +43,14 @@ func reset_combo() -> void:
 	color_tween = create_tween()
 	combo_label.modulate = Color(1, 0, 0)
 	color_tween.tween_property(combo_label, "modulate", Color(1, 1, 1), 0.3)
+
+func set_album_cover(texture_path: String) -> void:
+	if album_rect and texture_path != "":
+		var tex = load(texture_path)
+		if tex:
+			album_rect.texture = tex
+
+func update_metrics(hits: int, wrongs: int, misses: int) -> void:
+	if hits_label: hits_label.text = "Acertos: " + str(hits)
+	if wrongs_label: wrongs_label.text = "Erros: " + str(wrongs)
+	if misses_label: misses_label.text = "Perdidas: " + str(misses)

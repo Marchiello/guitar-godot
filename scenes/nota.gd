@@ -33,6 +33,7 @@ func setup(start_pos: Vector3, end_pos: Vector3, hit_time: float, current_travel
 	sprite = get_node("Textura") as Sprite3D
 	if sprite and lane >= 0 and lane < textures.size():
 		sprite.texture = textures[lane]
+		sprite.modulate = Color(1.5, 1.5, 1.5, 1.0) # Brilho padrão nas notas
 		
 	sustain_mesh = get_node_or_null("PivotSustain/MeshSustain") as MeshInstance3D
 	if sustain_mesh:
@@ -51,7 +52,7 @@ func setup(start_pos: Vector3, end_pos: Vector3, hit_time: float, current_travel
 			
 			# 📍 POSIÇÃO PURA:
 			sustain_mesh.position.x = 0.0
-			sustain_mesh.position.y = 0.0
+			sustain_mesh.position.y = -0.1
 			sustain_mesh.position.z = physical_length / 2.0
 		else:
 			# Se for uma nota simples, a malha FICA DESLIGADA!
@@ -88,19 +89,24 @@ func hit_head() -> void:
 	is_hit = true
 	if sprite:
 		sprite.visible = false
-	
-	# Opcional: Feedback visual de que está segurando
+		
 	if sustain_mesh:
 		var mat = sustain_mesh.material_override as StandardMaterial3D
 		if not mat:
 			mat = StandardMaterial3D.new()
-			# Tenta copiar o albedo do material original se existir
+			mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+			mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			
 			var orig_mat = sustain_mesh.get_active_material(0) as StandardMaterial3D
 			if orig_mat:
 				mat.albedo_color = orig_mat.albedo_color
+			else:
+				mat.albedo_color = Color(1, 1, 1)
+				
 			sustain_mesh.material_override = mat
 		
-		mat.albedo_color = mat.albedo_color * 1.5 # Brilho leve
+		# Feedback visual: Torna o rastro consideravelmente mais claro/brilhante (Glow)
+		mat.albedo_color = Color(3.0, 3.0, 3.0, 1.0)
 
 func drop_sustain() -> void:
 	is_released = true
