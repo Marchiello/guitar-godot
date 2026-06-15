@@ -1,0 +1,132 @@
+[gd_scene format=3 uid="uid://dblplm8cs11ts"]
+
+[ext_resource type="PackedScene" uid="uid://bkhpllktf7sde" path="res://scenes/braco_guitarra.tscn" id="1_rysoc"]
+[ext_resource type="Script" uid="uid://d1qrc64klxueb" path="res://scenes/game.gd" id="1_ssvqc"]
+[ext_resource type="PackedScene" uid="uid://dwr64twwk0kcs" path="res://scenes/botao_braco.tscn" id="2_ssvqc"]
+[ext_resource type="Texture2D" uid="uid://qfrv1svbngba" path="res://assets/buttons/green/inactive_green_button.png" id="3_264po"]
+[ext_resource type="Texture2D" uid="uid://bcmu8d30aikjo" path="res://assets/buttons/green/active_green_button.png" id="4_1kice"]
+[ext_resource type="Texture2D" uid="uid://cdsqtfa32oshg" path="res://assets/buttons/green/hit_green_button.png" id="5_5newe"]
+[ext_resource type="Texture2D" uid="uid://b416eq147opyp" path="res://assets/buttons/red/inactive_red_button.png" id="6_37s47"]
+[ext_resource type="Texture2D" uid="uid://bps6t3go40ijc" path="res://assets/buttons/red/active_red_button.png" id="7_bt5mj"]
+[ext_resource type="Texture2D" uid="uid://c8p32u1r270kn" path="res://assets/buttons/red/hit_red_button.png" id="8_e1j6l"]
+[ext_resource type="Texture2D" uid="uid://budblwp20w03i" path="res://assets/buttons/yellow/inactive_yellow_button.png" id="9_pl11u"]
+[ext_resource type="Texture2D" uid="uid://cuhj84j158itd" path="res://assets/buttons/yellow/active_yellow_button.png" id="10_bhx41"]
+[ext_resource type="Texture2D" uid="uid://bbwhwk6y3jdmc" path="res://assets/buttons/yellow/hit_yellow_button.png" id="11_qnb83"]
+[ext_resource type="Texture2D" uid="uid://dbmcw246rjyfr" path="res://assets/buttons/blue/inactive_blue_button.png" id="12_sww3w"]
+[ext_resource type="Texture2D" uid="uid://7tmk3i5pqqpt" path="res://assets/buttons/blue/active_blue_button.png" id="13_suyxu"]
+[ext_resource type="Texture2D" uid="uid://baa0sd24fcy3t" path="res://assets/buttons/blue/hit_blue_button.png" id="14_sgl2t"]
+[ext_resource type="Texture2D" uid="uid://k508oase6867" path="res://assets/buttons/orange/inactive_orange_button.png" id="15_qouja"]
+[ext_resource type="Texture2D" uid="uid://dh5rsh2slnu0i" path="res://assets/buttons/orange/active_orange_button.png" id="16_wljb1"]
+[ext_resource type="Texture2D" uid="uid://bxg30bjo0ulbg" path="res://assets/buttons/orange/hit_orange_button.png" id="17_v2yb1"]
+[ext_resource type="Script" uid="uid://dxx86pulftutj" path="res://scenes/sistema_chart.gd" id="19_264po"]
+[ext_resource type="PackedScene" uid="uid://bk8g8dc8n5wd8" path="res://scenes/nota.tscn" id="20_bhx41"]
+[ext_resource type="AudioStream" uid="uid://bqm0s62vkrfr3" path="res://assets/songs/scom/song.ogg" id="21_5newe"]
+[ext_resource type="Texture2D" uid="uid://c20y1kyxi5tud" path="res://assets/guitarneckwstrings.png" id="21_37s47"]
+
+[sub_resource type="Environment" id="Environment_rysoc"]
+glow_enabled = true
+fog_enabled = true
+fog_light_color = Color(0, 0, 0, 1)
+fog_density = 0.1749
+
+[node name="Game" type="Node3D" unique_id=1139084074]
+script = ExtResource("1_ssvqc")
+
+[node name="Recursos" type="Node3D" parent="." unique_id=666207016]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Recursos" unique_id=520074537]
+environment = SubResource("Environment_rysoc")
+
+[node name="BracoGuitarra" parent="." unique_id=1857486557 instance=ExtResource("1_rysoc")]
+transform = Transform3D(1.0161943, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Camera3D2" type="Camera3D" parent="BracoGuitarra" unique_id=349407487]
+transform = Transform3D(0.98406374, 0, 0, 0, 0.940199, -0.34062573, 0, 0.34062573, 0.940199, 0, 1.3558798, 14.476199)
+
+[node name="Botões" type="Node3D" parent="." unique_id=997230692]
+transform = Transform3D(0.55624676, 0, 0, 0, 0.13338582, 1.0156187, 0, -0.5842199, 0.23188044, -3.21977, -0.42259002, 6.588702)
+
+[node name="Verde" parent="Botões" unique_id=1430226811 instance=ExtResource("2_ssvqc")]
+texture_inactive = ExtResource("3_264po")
+texture_active = ExtResource("4_1kice")
+texture_hit = ExtResource("5_5newe")
+input_action = "botao_verde"
+
+[node name="Vermelho" parent="Botões" unique_id=582225984 instance=ExtResource("2_ssvqc")]
+transform = Transform3D(1, 0, 0, 0, 1, -1.1920929e-07, 0, 0, 1.0000004, 2.9642897, 0, 0)
+texture_inactive = ExtResource("6_37s47")
+texture_active = ExtResource("7_bt5mj")
+texture_hit = ExtResource("8_e1j6l")
+input_action = "botao_vermelho"
+
+[node name="Amarelo" parent="Botões" unique_id=1056284120 instance=ExtResource("2_ssvqc")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, -8.940697e-08, 0, 0, 1.0000002, 5.845568, 0, 0)
+texture_inactive = ExtResource("9_pl11u")
+texture_active = ExtResource("10_bhx41")
+texture_hit = ExtResource("11_qnb83")
+input_action = "botao_amarelo"
+
+[node name="Azul" parent="Botões" unique_id=614062698 instance=ExtResource("2_ssvqc")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, -8.940697e-08, 0, 0, 1.0000002, 8.824326, 0, 0)
+texture_inactive = ExtResource("12_sww3w")
+texture_active = ExtResource("13_suyxu")
+texture_hit = ExtResource("14_sgl2t")
+input_action = "botao_azul"
+
+[node name="Laranja" parent="Botões" unique_id=1577259176 instance=ExtResource("2_ssvqc")]
+transform = Transform3D(1.0000002, 0, 0, 0, 1, -1.4901161e-07, 0, 0, 1.0000004, 11.826283, 1.9073486e-06, 4.4107437e-06)
+texture_inactive = ExtResource("15_qouja")
+texture_active = ExtResource("16_wljb1")
+texture_hit = ExtResource("17_v2yb1")
+input_action = "botao_laranja"
+
+[node name="SistemaChart" type="Node3D" parent="." unique_id=12631615 node_paths=PackedStringArray("audio_player", "esteira_mesh", "spawn_markers", "target_markers")]
+script = ExtResource("19_264po")
+note_scene = ExtResource("20_bhx41")
+audio_player = NodePath("../AudioStreamPlayer")
+esteira_mesh = NodePath("../BracoGuitarra")
+scroll_speed = 0.2
+esteira_texture = ExtResource("21_37s47")
+spawn_markers = [NodePath("PontosInicio/Inicio_Verde"), NodePath("PontosInicio/Inicio_Vermelho"), NodePath("PontosInicio/Inicio_Amarelo"), NodePath("PontosInicio/Inicio_Azul"), NodePath("PontosInicio/Inicio_Laranja")]
+target_markers = [NodePath("PontosFinal/Final_Verde"), NodePath("PontosFinal/Final_Vermelho"), NodePath("PontosFinal/Final_Amarelo"), NodePath("PontosFinal/Final_Azul"), NodePath("PontosFinal/Final_Laranja")]
+
+[node name="PontosInicio" type="Node3D" parent="SistemaChart" unique_id=1700992278]
+
+[node name="Inicio_Verde" type="Marker3D" parent="SistemaChart/PontosInicio" unique_id=1273710419]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2557766, 4.5238185, -15.826443)
+
+[node name="Inicio_Vermelho" type="Marker3D" parent="SistemaChart/PontosInicio" unique_id=481299918]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6130348, 4.5238185, -15.826443)
+
+[node name="Inicio_Amarelo" type="Marker3D" parent="SistemaChart/PontosInicio" unique_id=1428005238]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.040287137, 4.5238185, -15.826443)
+
+[node name="Inicio_Azul" type="Marker3D" parent="SistemaChart/PontosInicio" unique_id=1439409266]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.679694, 4.5238185, -15.826443)
+
+[node name="Inicio_Laranja" type="Marker3D" parent="SistemaChart/PontosInicio" unique_id=598762830]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3275595, 4.5238185, -15.826443)
+
+[node name="PontosFinal" type="Node3D" parent="SistemaChart" unique_id=1462134984]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.12574601, 0.6744838)
+
+[node name="Final_Verde" type="Marker3D" parent="SistemaChart/PontosFinal" unique_id=2078002885]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.201828, -0.44368362, 6.5741386)
+
+[node name="Final_Vermelho" type="Marker3D" parent="SistemaChart/PontosFinal" unique_id=516475965]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5484865, -0.44368362, 6.5741386)
+
+[node name="Final_Amarelo" type="Marker3D" parent="SistemaChart/PontosFinal" unique_id=614709854]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061092377, -0.44368362, 6.5741386)
+
+[node name="Final_Azul" type="Marker3D" parent="SistemaChart/PontosFinal" unique_id=1003101943]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7082617, -0.44368362, 6.5741386)
+
+[node name="Final_Laranja" type="Marker3D" parent="SistemaChart/PontosFinal" unique_id=866086265]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.360964, -0.44368362, 6.5741386)
+
+[node name="Nota" parent="SistemaChart" unique_id=1644267541 instance=ExtResource("20_bhx41")]
+transform = Transform3D(0.44891793, 0, 0, 0, -3.6726874e-08, -0.37973008, 0, 0.84021294, -1.659853e-08, 0, -13.365025, 7.2324185)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=671368711]
+stream = ExtResource("21_5newe")

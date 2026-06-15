@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bkhpllktf7sde"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_hs2xg"]
+lightmap_size_hint = Vector2i(14, 21)
+
+[node name="BracoGuitarra" type="Node3D" unique_id=1857486557]
+
+[node name="BracoGuitarra" type="MeshInstance3D" parent="." unique_id=162946908]
+transform = Transform3D(7.825791, 0, 0, 0, 0.15449221, -5.287201, 0, 0.034088884, 23.961811, 0.059414864, 1.7959061, -3.9227753)
+mesh = SubResource("BoxMesh_hs2xg")

@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bk8g8dc8n5wd8"]
+
+[ext_resource type="Texture2D" uid="uid://cd7a2nh5qfv2e" path="res://assets/Notes/blue_note.png" id="1_np0oh"]
+[ext_resource type="Script" uid="uid://c5s07sglevrhs" path="res://scenes/nota.gd" id="1_tich3"]
+[ext_resource type="Texture2D" uid="uid://ciyv61ocxvikc" path="res://assets/Notes/green_note.png" id="2_ftu4q"]
+[ext_resource type="Texture2D" uid="uid://ef5f50iiika3" path="res://assets/Notes/red_note.png" id="3_spqmu"]
+[ext_resource type="Texture2D" uid="uid://bl5jhvd5ineux" path="res://assets/Notes/yellow_note.png" id="4_4d3qs"]
+[ext_resource type="Texture2D" uid="uid://c2w4vppvrmne1" path="res://assets/Notes/orange_note.png" id="6_cmdn4"]
+
+[node name="Nota" type="Node3D" unique_id=1644267541]
+transform = Transform3D(1, 0, 0, 0, -0.6383515, -0.76974505, 0, 0.76974505, -0.6383515, 0, -1, 0)
+script = ExtResource("1_tich3")
+textures = Array[Texture2D]([ExtResource("2_ftu4q"), ExtResource("3_spqmu"), ExtResource("4_4d3qs"), ExtResource("1_np0oh"), ExtResource("6_cmdn4")])
+
+[node name="Textura" type="Sprite3D" parent="." unique_id=809099613]
+transform = Transform3D(0.51566184, 0, 0, 0, -0.16264212, 0.4317745, 0, -0.7830303, -0.08968334, 0, 0, 0)
+offset = Vector2(0, 125)
+axis = 1
+texture = ExtResource("1_np0oh")
