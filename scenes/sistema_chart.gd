@@ -112,7 +112,7 @@ func _ready() -> void:
 	if not error_audio_player:
 		error_audio_player = AudioStreamPlayer.new()
 		# Dá pra ajustar o volume aqui se ficar muito alto (ex: -5.0)
-		error_audio_player.volume_db = -5.0
+		error_audio_player.volume_db = 5.0
 		add_child(error_audio_player)
 		
 	if ProgressoJogo and ProgressoJogo.fase_atual == 0:
@@ -194,12 +194,12 @@ func _process(delta: float) -> void:
 			ui_instance.show_tutorial_text("Notas Simples:\nAperte a tecla no momento exato em que a nota cruzar o botão!")
 		elif game_clock < 7.5:
 			ui_instance.show_tutorial_text("Notas Longas (Sustain):\nSegure a tecla sem soltar até o rastro luminoso acabar!")
-		elif game_clock < 11.5:
-			ui_instance.show_tutorial_text("Regra de Ouro: Errar 15 vezes SEGUIDAS dá Game Over!")
 		elif game_clock < 15.5:
-			ui_instance.show_tutorial_text("Mas basta acertar UMA nota\npara esse contador de Erros zerar na hora!")
+			ui_instance.show_tutorial_text("Vamos fixar o aprendizado!\nRepita os movimentos com atenção.")
+		elif game_clock < 20.5:
+			ui_instance.show_tutorial_text("Regra de Ouro: Errar 15 vezes SEGUIDAS dá Game Over!")
 		elif game_clock < 25.5:
-			ui_instance.show_tutorial_text("Zigue-Zague!\nTeste sua coordenação motora para finalizar!")
+			ui_instance.show_tutorial_text("Mas basta acertar UMA nota\npara esse contador de Erros zerar na hora!")
 		else:
 			ui_instance.show_tutorial_text("Excelente!\nVocê está pronto para o Rock!")
 

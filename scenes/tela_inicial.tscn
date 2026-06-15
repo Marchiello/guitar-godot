@@ -54,11 +54,13 @@ text = "GUITAR GODOT"
 horizontal_alignment = 1
 
 [node name="BtnJogar" type="Button" parent="VBoxContainer" unique_id=359210016]
+custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "Jogar"
 
 [node name="BtnSair" type="Button" parent="VBoxContainer" unique_id=945032318]
+custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "Sair"

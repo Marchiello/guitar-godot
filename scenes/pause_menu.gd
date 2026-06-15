@@ -2,6 +2,7 @@ extends CanvasLayer
 
 func _ready() -> void:
 	$Panel/VBoxContainer/BtnContinuar.pressed.connect(_on_continuar)
+	$Panel/VBoxContainer/BtnReiniciar.pressed.connect(_on_reiniciar)
 	$Panel/VBoxContainer/BtnSair.pressed.connect(_on_sair)
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -19,3 +20,7 @@ func _on_continuar() -> void:
 func _on_sair() -> void:
 	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/menu_fases.tscn")
+
+func _on_reiniciar() -> void:
+	get_tree().paused = false
+	get_tree().reload_current_scene()

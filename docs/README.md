@@ -1,19 +1,25 @@
-# Documentação do Guitar Godot
+# 🎸 O GUIA SALVA-VIDAS: Como Criar seu Primeiro Guitar Hero no Godot 4
 
-Bem-vindo à documentação do projeto Guitar Godot. Esta documentação foi escrita para auxiliar desenvolvedores a entenderem a arquitetura do projeto e recriarem suas lógicas e mecânicas, desde o parsing de arquivos `.chart` até os truques avançados de renderização em 3D.
+> **ATENÇÃO LEITOR:** Respira fundo. Se você nunca programou um jogo na vida, pegue um café. Este guia foi escrito para **VOCÊ**. Vamos pegar na sua mão e te explicar o "porquê" de cada coisinha. Nós não vamos deixar você ser demitido. Sua família vai ter orgulho de você! ❤️
 
-## Módulos do Sistema
+Bem-vindo à Bíblia do projeto **Guitar Godot**. 
+Nós vamos te ensinar a construir esse jogo traduzindo o "código de computador" para situações do dia a dia. Você vai entender como as engrenagens se movem.
 
-Por favor, navegue pelos módulos abaixo para entender como cada peça do jogo funciona por baixo dos panos:
+## 🗂️ A Trilha do Sucesso
 
-1. **[Arquitetura e Progressão](1_arquitetura_e_progressao.md)**  
-   Explica o uso do Autoload (Singleton) para salvar recordes de combo e gerenciar o avanço de fases do jogo, além da injeção de dependências das músicas.
+Leia os arquivos abaixo na ordem. Cada um é uma aula passo-a-passo:
 
-2. **[Sistema de Charts e Sincronia Rítmica](2_sistema_de_charts_e_sincronia.md)**  
-   O coração do jogo. Como os arquivos do *Clone Hero / Guitar Hero* são lidos, como os Ticks musicais são convertidos em Segundos, e como o relógio do jogo previne dessincronia do áudio.
+1. **[O Cérebro do Jogo (Arquitetura e Progressão)](1_arquitetura_e_progressao.md)**
+   Aprenda o que é um "Autoload" (o chefão que nunca morre) e como guardamos as pontuações e fases usando "Dicionários" (pastas de arquivo).
 
-3. **[Notas e Sistema de Sustain (Cauda)](3_notas_e_sustain.md)**  
-   Como instanciar e gerenciar as notas 3D dinamicamente. Explica a matemática necessária para esticar o rastro da nota com base no tempo de duração (sustain) e a lógica de colisão visual (Glow).
+2. **[O Coração Musical (Sistema de Charts e Sincronia)](2_sistema_de_charts_e_sincronia.md)**
+   Como ler um arquivo cheio de números e transformar isso em música no tempo certo. Vamos te explicar o maior segredo de todos: como nunca deixar a tela ficar fora de ritmo com a música!
 
-4. **[Renderização, Luzes e Profundidade (Z-Fighting)](4_renderizacao_e_profundidade.md)**  
-   Soluções gráficas adotadas no Godot 4 (Compatibility Mode). Como criar o efeito de luz Neon/Glow sem suporte a HDR e como forçar o Godot a renderizar elementos transparentes na ordem correta usando `render_priority`.
+3. **[A Magia 3D (Notas, Física e o Rastro)](3_notas_e_sustain.md)**
+   O que é 3D? Como a nota desliza? Vamos falar sobre o "Lerp" (seu GPS interno) e a matemática mágica de fazer a nota ter um rastro que cresce para trás.
+
+4. **[Beleza e Iluminação (Renderização e Efeitos)](4_renderizacao_e_profundidade.md)**
+   Como fazer as coisas brilharem (Glow) mesmo em computadores muito fracos, e como resolver o bug feio de imagens que ficam tremendo (Z-Fighting).
+
+5. **[Telas e Botões (Interface e Pause)](5_ui_e_menus.md)**
+   Como garantir que o seu menu fique no meio da tela na televisão gigante da sala e no celular. E a mágica de fazer o menu de Pause continuar funcionando quando o universo do jogo foi congelado!

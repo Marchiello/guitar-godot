@@ -1,7 +1,7 @@
 extends Node
 
 # Controla qual a maior fase que o jogador liberou
-var fase_maxima_liberada: int = 3
+var fase_maxima_liberada: int = 1
 
 # Estrutura de dados para guardar as configurações de cada fase
 var info_fases = {
@@ -20,6 +20,8 @@ var recordes_combo = {
 
 # Variável temporária para a fase que está rodando agora
 var fase_atual: int = 1
+
+var jogo_zerado_visto: bool = false
 
 func atualizar_recorde(novo_combo: int) -> bool:
 	if fase_atual in recordes_combo and novo_combo > recordes_combo[fase_atual]:

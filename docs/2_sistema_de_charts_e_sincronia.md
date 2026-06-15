@@ -1,55 +1,47 @@
-# 2. Sistema de Charts e Sincronia Rítmica
+# Aula 2: O Coração Musical (Sincronia e Arquivos .chart)
 
-O núcleo de um jogo musical (Rhythm Game) é ler as batidas e sincronizá-las visualmente com a música.
+Preste muita atenção, porque entender isso separa os amadores dos profissionais.
+Em jogos de tiro ou Mario, os inimigos se movem usando a velocidade do seu processador. Se o seu PC for fraco e der uma travada rápida, o jogo congela, você espera um pouquinho, e tudo volta ao normal. 
 
-## Leitura do formato `.chart`
-Arquivos `.chart` padrão (usados na comunidade de *Clone Hero*) organizam os eventos em seções.
-- `[SyncTrack]`: Define a resolução (quantos ticks por batida) e as mudanças de BPM (Batidas Por Minuto).
-- `[ExpertSingle]`: Define as notas que o jogador precisa acertar em uma dificuldade específica.
+**Em jogos de Música, isso é Proibido.** A música toca direto da sua placa de som. Ela não liga se o seu jogo travou. Se o seu jogo parar por 1 segundo e as notas de guitarra congelarem no ar, quando ele voltar, as notas estarão 1 segundo atrasadas. A música já passou!
 
-### Como a Leitura Funciona (Raciocínio)
-Lemos o arquivo `.chart` linha por linha:
-1. Extraímos o `Resolution` (ex: 192 ticks equivalem a 1 tempo musical/beat).
-2. Armazenamos as alterações de BPM em um array `bpm_events = [{tick, bpm}]`. No `.chart`, o BPM é armazenado multiplicado por 1000 (ex: `120000` = `120 BPM`).
-3. Armazenamos as notas `N` em `chart_notes = [{time (em ticks), lane, sustain}]`.
-
-## A Matemática do Tempo: Convertendo Ticks em Segundos
-O Godot e as físicas do jogo funcionam em Segundos (Tempo Real). Mas o arquivo de música armazena as notas em Ticks (Tempo Rítmico Musical). 
+## O Relógio Divino (Sincronização Absoluta)
+O truque é nunca confiar na matemática do computador para mover as notas. A sua "bússola" deve ser a **música**.
+O Godot tem uma função maravilhosa no reprodutor de áudio (`AudioStreamPlayer`) chamada `get_playback_position()`. Ela te responde a pergunta: *"Em qual segundo exato da música nós estamos?"*.
 
 ```gdscript
-func tick_to_seconds(target_tick: int) -> float:
-	var total_seconds = 0.0
-	var current_tick = 0
-	var current_bpm = 120.0
-	
-	for event in bpm_events:
-		if target_tick <= event["tick"]:
-			break
-		# Calcula quanto tempo passou com o BPM anterior até o ponto da mudança
-		var ticks_diff = event["tick"] - current_tick
-		var beats_diff = float(ticks_diff) / float(resolution)
-		total_seconds += beats_diff * (60.0 / current_bpm)
-		current_tick = event["tick"]
-		current_bpm = event["bpm"]
-		
-	# Calcula o trecho restante
-	var ticks_diff = target_tick - current_tick
-	var beats_diff = float(ticks_diff) / float(resolution)
-	total_seconds += beats_diff * (60.0 / current_bpm)
-	return total_seconds
-```
-**Por que isso é necessário?**
-O BPM de uma música nem sempre é constante. Se a música acelera (de 120 para 150 BPM no meio), um "tick" de nota depois desse evento vale menos segundos do que antes. Essa função interage com o histórico de BPMs para traduzir o tempo exato em milissegundos que aquela nota precisa atingir a zona de acerto.
-
-## Sincronização do Relógio (Prevenção de Lag)
-Se você basear a queda das notas no *Delta Time* da CPU (`_process(delta)` -> `clock += delta`), pequenas engasgadas no computador (frame drops) farão as notas perderem sincronia com o áudio (que é imutável na placa de som).
-
-**A Solução de Sincronia Áudio-Relógio:**
-```gdscript
+# Todo "frame" da tela (60 vezes por segundo), atualizamos nosso relógio:
 game_clock = audio_player.get_playback_position() + song_start_delay
 ```
-No `_process`, o relógio da esteira "pergunta" ao motor de som em que ponto exato a música está. Assim, se houver um travamento de vídeo, as notas darão um pequeno "teleporte" visual para acompanhar a música sem causar dessincronia!
+O que acontece se o computador travar por 1 segundo? O relógio não conta 1, ele **pula** direto pro segundo correto da música. As notas dão um "teleporte" na tela e continuam exatamente alinhadas com o áudio!
 
-## Janela de Hit (Hit Window)
-Quando um botão é apertado, o código itera pelo array de `active_notes`.
-Se existe uma nota cuja `target_time` está próxima do `game_clock` (dentro de uma tolerância `hit_window` de `0.15s`), declaramos um "Hit". Se o loop de notas acabar e nenhuma se qualificou, chamamos de `Ghost Hit` (penalidade por espamar botões, incrementando os "Erros" e zerando o Combo).
+## O que raios é um ".chart"?
+`.chart` é um arquivo de texto de bloquinho de notas que a comunidade do jogo *Clone Hero* criou.
+O nosso código (`sistema_chart.gd`) vai abrir esse arquivo e tentar achar a seção que fala sobre as notas (a seção `[ExpertSingle]`).
+
+O arquivo tem linhas tipo essa:
+`  1152 = N 0 192`
+
+Nós programamos o Godot para agir como um "Tradutor":
+1. Ele quebra a frase nos pedaços vazios (espaços).
+2. O primeiro pedaço (`1152`) é o **Tempo** da nota (medido em "Ticks" musicais).
+3. O terceiro pedaço (`0`) é o **Botão** (0 é Verde, 1 Vermelho, etc).
+4. O quarto pedaço (`192`) é o **Rastro**. Se for maior que zero, é a duração que o cara tem que segurar o botão.
+
+### Listas (Arrays)
+Como guardamos milhares de notas para o jogo lembrar? Colocamos dentro de um **Array**. Um Array (Lista) é como um vagão de trem. Ele guarda várias coisas em fila indiana.
+Nós colocamos cada notazinha no vagão. Conforme a música toca e o segundo daquela nota se aproxima, a esteira do nosso jogo "Cospe" a nota na tela e tira ela do vagão de espera.
+
+## Janela de Acerto (O Juiz do Jogo)
+Quando você aperta o Botão Laranja da vida real, como o computador sabe que você acertou a nota laranja da tela?
+
+Ele faz uma conta de subtração (uma diferença)!
+```gdscript
+var diferenca_de_tempo = abs(nota.tempo_alvo - game_clock)
+
+# Se a diferença entre a nota encostar na linha e o momento atual for menor que 0.15s...
+if diferenca_de_tempo <= 0.15: 
+	 # ACERTOU! (Hit)
+	 destruir_nota()
+```
+A função mágica `abs()` (Valor Absoluto) tira o sinal negativo. Ou seja, não importa se você apertou 0.15 segundos **adiantado** ou 0.15 segundos **atrasado**. Se a nota estava perto, você ganha o ponto!

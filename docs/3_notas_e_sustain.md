@@ -1,43 +1,33 @@
-# 3. Notas e Sistema de Sustain (Cauda)
+# Aula 3: A Magia 3D (Notas, Física e o Rastro)
 
-As notas no jogo são instanciadas dinamicamente com base nos eventos traduzidos da `.chart`. 
-Elas recebem o momento em que devem aparecer, e o momento `target` (quando chegam ao botão). O tempo de viagem da nota pela esteira é constante (ex: `travel_time = 1.5s`). 
+No mundo 3D, tudo funciona com **Eixos**: `X` (Esquerda/Direita), `Y` (Cima/Baixo) e `Z` (Frente/Trás).
+Para uma nota cair certinho do topo da guitarra pro botão lá embaixo, nós não empurramos ela manualmente. Nós dizemos pro Godot qual é o Ponto A e qual o Ponto B, e usamos uma matemática chamada **LERP**.
 
-## A Matemática do Posicionamento Físico
+## LERP (A sua Bússola Interpoladora)
+LERP significa "Interpolação Linear". Basicamente, imagine que você quer viajar de São Paulo ao Rio de Janeiro. A viagem leva 10 horas. Você está dirigindo há 5 horas. Você completou 50% (ou `0.5`) da viagem. Se você perguntar pro GPS: "Qual cidade fica em 50% desse caminho?", ele te dá a resposta exata de onde você está.
 
-No `_process(delta)` de cada nota ativa, calculamos um `progress` normalizado entre 0.0 (início da vida) e 1.0 (momento do Hit).
-
+É isso que fazemos com a nota!
+Nós sabemos que a nota leva `1.5` segundos para fazer o caminho. 
 ```gdscript
-func get_progress(current_game_time: float) -> float:
-	var elapsed = current_game_time - spawn_time
-	return elapsed / travel_time
+# Descobrindo a porcentagem
+var progresso = (relogio_do_jogo - tempo_que_a_nota_nasceu) / 1.5
+
+# Pedindo a resposta pro LERP: "Me dê a posição 3D exata dessa porcentagem!"
+nota.global_position = PontoInicial.lerp(PontoFinal, progresso)
 ```
 
-Esse progresso é devolvido para o Sistema Chart (Pai), que faz um LERP (Interpolação Linear 3D) entre o `Marker3D` de Inicio e o `Marker3D` Final do chão da esteira.
+## O Rastro (Sustain) e a Mágica do Pivô (Parenting)
+Algumas notas tem uma cauda luminosa gigante que indica que você precisa segurar o botão por, digamos, `2.0` segundos.
+Como criamos uma cauda de "2 segundos"?
 
-## A Cauda / Rastro (Sustain)
+Simples: Se a nota viaja numa velocidade de 10 Metros por Segundo, em 2 segundos ela teria percorrido 20 Metros. Então nós geramos um cilindro 3D, pegamos a propriedade **Escala** (`Scale.Z`) dele, e multiplicamos o tamanho para 20!
 
-Se uma nota precisa ser segurada, o arquivo `.chart` traz um parâmetro `sustain_length` maior que zero. O tamanho físico (comprimento do cilindro 3D) da cauda deve ser matematicamente calculado para que seu fim cruze o botão exatamente no tempo musical correto de se soltar.
+**O GRANDE PROBLEMA DA VIDA REAL:**
+Na vida real, se você pegar uma bola de chiclete no meio da mesa e esticar para 20 metros, ela cresce 10 metros para a direita e 10 metros para a esquerda. O centro não muda!
+Se você esticar o cilindro da nossa nota, metade dele vai passar pra frente do botão, estragando o visual. Nós queremos que a nota seja o "bico" e o rastro cresça só para trás!
 
-**A Fórmula do Comprimento:**
-```gdscript
-# Calculando a velocidade real (espaço / tempo)
-var total_distance = spawn_pos.distance_to(target_pos)
-var note_speed = total_distance / travel_time
+**A Solução: NÓS DENTRO DE NÓS (Parenting)**
+Imagine segurar o cabo de uma vassoura. Onde está a sua mão? No meio? Na ponta?
+No Godot, nós usamos "Pais e Filhos". Criamos um Nó vazio que não tem desenho nenhum, chamado de "Pivô", e colocamos ele na **Ponta** superior do rastro (como se estivéssemos segurando a ponta do cabo da vassoura). Quando nós esticamos a madeira da vassoura, nós usamos o código para arrastar a vassoura pra trás para compensar o esticamento!
 
-# Se ele dura 1.5s e a velocidade é X, o cilindro deve ter tamanho = X * 1.5
-var physical_length = sustain_duration * note_speed
-```
-
-**Pivot e Origem no Godot:**
-Cilindros e malhas 3D no Godot crescem para ambos os lados a partir do centro (origem no meio). Como nossa nota (a "Cabeça") puxa a cauda como um cometa, o pivô precisava ser ancorado numa ponta. 
-A solução foi deslocar o eixo interno da malha em `physical_length / 2.0`. Assim, ao aumentar a escala do cilindro no eixo Z para `physical_length`, ele cresce "para trás" a partir da Cabeça da nota, não invadindo o espaço para frente!
-
-## Feedback Visual: Unshaded Material
-
-Quando você acerta uma nota de Sustain, a cauda precisa se acender para comunicar visualmente o acerto contínuo.
-
-```gdscript
-mat.albedo_color = Color(3.0, 3.0, 3.0, 1.0)
-```
-Multiplicar canais de cores (RGB) por valores acima de 1.0 faz com que o Pixel extrapole o branco e passe a atuar como uma Lâmpada no Pipeline Gráfico. Em configurações de Glow com HDR, isso cria um "Neon" fortíssimo. Para evitar escurecimento provocado pela falta de iluminação direcional, ativamos na malha a flag `Unshaded`, para que ela seja sempre renderizada emitindo sua cor pura.
+O resultado? Uma cauda brilhante incrível que só cresce rumo ao topo da tela, presa embaixo da nota!
