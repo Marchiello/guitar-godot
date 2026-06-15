@@ -27,7 +27,7 @@
 glow_enabled = true
 fog_enabled = true
 fog_light_color = Color(0, 0, 0, 1)
-fog_density = 0.1749
+fog_density = 0.16
 
 [node name="Game" type="Node3D" unique_id=1139084074]
 script = ExtResource("1_ssvqc")
@@ -126,7 +126,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7082617, -0.44368362, 6.574
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.360964, -0.44368362, 6.5741386)
 
 [node name="Nota" parent="SistemaChart" unique_id=1644267541 instance=ExtResource("20_bhx41")]
-transform = Transform3D(0.44891793, 0, 0, 0, -3.6726874e-08, -0.37973008, 0, 0.84021294, -1.659853e-08, 0, -13.365025, 7.2324185)
+transform = Transform3D(0.44792455, -0.051580355, 0.009695876, 0.0032726973, -0.23584977, -0.36445248, 0.02966766, 0.80478084, -0.10618534, -0.06065011, -12.558436, 4.874203)
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=671368711]
 stream = ExtResource("21_5newe")

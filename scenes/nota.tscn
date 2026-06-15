@@ -7,13 +7,28 @@
 [ext_resource type="Texture2D" uid="uid://bl5jhvd5ineux" path="res://assets/Notes/yellow_note.png" id="4_4d3qs"]
 [ext_resource type="Texture2D" uid="uid://c2w4vppvrmne1" path="res://assets/Notes/orange_note.png" id="6_cmdn4"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ftu4q"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 3.2
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_spqmu"]
+material = SubResource("StandardMaterial3D_ftu4q")
+
 [node name="Nota" type="Node3D" unique_id=1644267541]
-transform = Transform3D(1, 0, 0, 0, -0.6383515, -0.76974505, 0, 0.76974505, -0.6383515, 0, -1, 0)
+transform = Transform3D(1, 0, 0, 0, -0.6383514, -0.7697451, 0, 0.7697451, -0.6383514, 0, -1, 0)
 script = ExtResource("1_tich3")
 textures = Array[Texture2D]([ExtResource("2_ftu4q"), ExtResource("3_spqmu"), ExtResource("4_4d3qs"), ExtResource("1_np0oh"), ExtResource("6_cmdn4")])
 
 [node name="Textura" type="Sprite3D" parent="." unique_id=809099613]
-transform = Transform3D(0.51566184, 0, 0, 0, -0.16264212, 0.4317745, 0, -0.7830303, -0.08968334, 0, 0, 0)
+transform = Transform3D(0.51566184, 0, 0, 0, 0.1662898, 0.43135184, 0, -0.7822638, 0.09169462, 0, 0, 0)
 offset = Vector2(0, 125)
 axis = 1
 texture = ExtResource("1_np0oh")
+
+[node name="PivotSustain" type="Node3D" parent="." unique_id=553543070]
+transform = Transform3D(1, 0, 0, 0, 0.4612998, -0.88724464, 0, 0.88724464, 0.4612998, 0, -0.4333201, -0.047979355)
+
+[node name="MeshSustain" type="MeshInstance3D" parent="PivotSustain" unique_id=1933306343]
+transform = Transform3D(0.25, 0, 0, 0, 0.02, 0, 0, 0, 10.956734, 0, -0.019999921, 5.478368)
+mesh = SubResource("CylinderMesh_spqmu")

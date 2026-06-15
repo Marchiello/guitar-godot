@@ -33,3 +33,12 @@ func set_visual_state(new_texture: Texture2D, glow_intensity: float) -> void:
 		# O truque mágico: multiplicando a cor branca pura (1,1,1) pela intensidade,
 		# nós passamos do limite do HDR e o WorldEnvironment faz o sprite BRILHAR.
 		sprite.modulate = Color(1, 1, 1) * glow_intensity
+
+func show_hit_feedback() -> void:
+	# Usar call_deferred evita a condição de corrida onde o _input deste botão 
+	# poderia sobrescrever a textura voltando para texture_active na mesma frame!
+	call_deferred("_apply_hit_feedback")
+
+func _apply_hit_feedback() -> void:
+	if is_pressed:
+		set_visual_state(texture_hit, 3.0)

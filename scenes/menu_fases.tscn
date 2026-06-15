@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://bgxec00y5m6ip"]
+
+[ext_resource type="Script" uid="uid://djdyi1halvhq2" path="res://menu_fases.gd" id="1_o53uy"]
+
+[node name="MenuFases" type="Control" unique_id=811419927]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_o53uy")
+
+[node name="BotaoFase1" type="Button" parent="." unique_id=1285859489]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="BotaoFase2" type="Button" parent="." unique_id=895829718]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="BotaoFase3" type="Button" parent="." unique_id=1777034162]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
