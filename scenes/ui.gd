@@ -23,8 +23,14 @@ func update_combo(current_combo: int) -> void:
 		combo_label.scale = Vector2(1.4, 1.4)
 		tween.tween_property(combo_label, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_SPRING)
 
+var color_tween: Tween
+
 func reset_combo() -> void:
 	combo_label.text = "Combo: 0"
-	var tween = create_tween()
+	
+	if color_tween and color_tween.is_valid():
+		color_tween.kill()
+		
+	color_tween = create_tween()
 	combo_label.modulate = Color(1, 0, 0)
-	tween.tween_property(combo_label, "modulate", Color(1, 1, 1), 0.3)
+	color_tween.tween_property(combo_label, "modulate", Color(1, 1, 1), 0.3)

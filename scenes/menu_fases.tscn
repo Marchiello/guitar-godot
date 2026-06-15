@@ -1,25 +1,85 @@
-[gd_scene format=3 uid="uid://bgxec00y5m6ip"]
+[gd_scene load_steps=2 format=3 uid="uid://bgxec00y5m6ip"]
 
-[ext_resource type="Script" uid="uid://djdyi1halvhq2" path="res://menu_fases.gd" id="1_o53uy"]
+[ext_resource type="Script" path="res://scenes/menu_fases.gd" id="1_script"]
 
-[node name="MenuFases" type="Control" unique_id=811419927]
+[node name="MenuFases" type="Control"]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("1_o53uy")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
 
-[node name="BotaoFase1" type="Button" parent="." unique_id=1285859489]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.15, 0.15, 0.2, 1)
 
-[node name="BotaoFase2" type="Button" parent="." unique_id=895829718]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 60.0
+offset_right = 300.0
+offset_bottom = 130.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 48
+text = "MAPA DE FASES"
+horizontal_alignment = 1
 
-[node name="BotaoFase3" type="Button" parent="." unique_id=1777034162]
+[node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(250, 300, 576, 300, 902, 300)
+width = 12.0
+default_color = Color(0.4, 0.4, 0.4, 1)
+
+[node name="BtnFase1" type="Button" parent="."]
 layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+offset_left = 200.0
+offset_top = 250.0
+offset_right = 300.0
+offset_bottom = 350.0
+theme_override_font_sizes/font_size = 48
+text = "1"
+
+[node name="BtnFase2" type="Button" parent="."]
+layout_mode = 0
+offset_left = 526.0
+offset_top = 250.0
+offset_right = 626.0
+offset_bottom = 350.0
+theme_override_font_sizes/font_size = 48
+text = "2"
+
+[node name="BtnFase3" type="Button" parent="."]
+layout_mode = 0
+offset_left = 852.0
+offset_top = 250.0
+offset_right = 952.0
+offset_bottom = 350.0
+theme_override_font_sizes/font_size = 48
+text = "3"
+
+[node name="BtnVoltar" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = -40.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 32
+text = "Voltar"
+
+[connection signal="pressed" from="BtnFase1" to="." method="_on_btn_fase1_pressed"]
+[connection signal="pressed" from="BtnFase2" to="." method="_on_btn_fase2_pressed"]
+[connection signal="pressed" from="BtnFase3" to="." method="_on_btn_fase3_pressed"]
+[connection signal="pressed" from="BtnVoltar" to="." method="_on_btn_voltar_pressed"]

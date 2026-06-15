@@ -41,7 +41,7 @@ environment = SubResource("Environment_rysoc")
 transform = Transform3D(1.0161943, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Camera3D2" type="Camera3D" parent="BracoGuitarra" unique_id=349407487]
-transform = Transform3D(0.98406374, 0, 0, 0, 0.940199, -0.34062573, 0, 0.34062573, 0.940199, 0, 1.3558798, 14.476199)
+transform = Transform3D(0.98406374, 0, 0, 0, 0.940199, -0.34062573, 0, 0.34062573, 0.940199, 0, 1.3558798, 13.611678)
 
 [node name="Botões" type="Node3D" parent="." unique_id=997230692]
 transform = Transform3D(0.55624676, 0, 0, 0, 0.13338582, 1.0156187, 0, -0.5842199, 0.23188044, -3.21977, -0.42259002, 6.588702)

@@ -6,7 +6,6 @@ extends Node
 @export var esteira_mesh: Node3D
 @export var scroll_speed: float = 2.0
 
-# Certifique-se de arrastar a imagem da esteira aqui no Inspector!
 @export var esteira_texture: Texture2D 
 
 @export_group("Nós de Spawn (Origem)")
@@ -26,10 +25,19 @@ var current_combo: int = 0
 var max_combo: int = 0
 var consecutive_misses: int = 0
 
+var error_sounds: Array[AudioStream] = [
+	preload("res://assets/ErrorSongs/Error1.ogg"),
+	preload("res://assets/ErrorSongs/Error2.ogg"),
+	preload("res://assets/ErrorSongs/Error3.ogg")
+]
+var error_audio_player: AudioStreamPlayer
+
 const UI_SCENE = preload("res://scenes/ui.tscn")
 const GAME_OVER_SCENE = preload("res://scenes/game_over.tscn")
+const VICTORY_SCENE = preload("res://scenes/victory.tscn")
 var ui_instance: CanvasLayer
 var game_over_triggered: bool = false
+var victory_triggered: bool = false
 
 var resolution: float = 192.0
 
@@ -66,7 +74,14 @@ func _ready() -> void:
 	if botoes_parent:
 		fret_buttons_nodes = botoes_parent.get_children()
 		
-	load_chart_file("res://assets/songs/notes.chart")
+	# Carrega de forma dinâmica as infos do Autoload ProgressoJogo
+	if ProgressoJogo and ProgressoJogo.info_fases.has(ProgressoJogo.fase_atual):
+		var fase_info = ProgressoJogo.info_fases[ProgressoJogo.fase_atual]
+		load_chart_file(fase_info["chart"])
+		if audio_player:
+			audio_player.stream = load(fase_info["musica"])
+	else:
+		load_chart_file("res://assets/songs/notes.chart") # Fallback
 	
 	game_clock = 0.0
 	audio_started = false
@@ -74,10 +89,17 @@ func _ready() -> void:
 	max_combo = 0
 	consecutive_misses = 0
 	game_over_triggered = false
+	victory_triggered = false
 	
 	if not ui_instance:
 		ui_instance = UI_SCENE.instantiate()
 		add_child(ui_instance)
+		
+	if not error_audio_player:
+		error_audio_player = AudioStreamPlayer.new()
+		# Dá pra ajustar o volume aqui se ficar muito alto (ex: -5.0)
+		error_audio_player.volume_db = 0.0
+		add_child(error_audio_player)
 
 	if esteira_mesh and esteira_texture:
 		var malha_real: MeshInstance3D = null
@@ -111,6 +133,8 @@ func _ready() -> void:
 # ==========================================================
 			
 func _process(delta: float) -> void:
+	if game_over_triggered or victory_triggered: return
+	
 	if not audio_player:
 		return
 		
@@ -121,6 +145,14 @@ func _process(delta: float) -> void:
 			audio_started = true
 	else:
 		game_clock = audio_player.get_playback_position() + song_start_delay
+		
+	check_note_spawns(game_clock)
+	update_active_notes(game_clock)
+	
+	# Verifica Condição de Vitória (todas as notas acabaram e a música parou)
+	if audio_started and chart_notes_queue.is_empty() and active_notes.is_empty():
+		if audio_player and not audio_player.playing:
+			trigger_victory()
 
 	if esteira_material:
 		var uv_offset = fmod(game_clock * scroll_speed, 1.0)
@@ -253,10 +285,14 @@ func reset_combo() -> void:
 	
 	consecutive_misses += 1
 	
-	if current_combo > 0:
-		current_combo = 0
-		if ui_instance:
-			ui_instance.reset_combo()
+	# Toca o som de erro sorteado!
+	if error_audio_player and error_sounds.size() > 0:
+		error_audio_player.stream = error_sounds.pick_random()
+		error_audio_player.play()
+	
+	current_combo = 0
+	if ui_instance:
+		ui_instance.reset_combo()
 			
 	if consecutive_misses >= 15:
 		trigger_game_over()
@@ -269,11 +305,19 @@ func trigger_game_over() -> void:
 	var go_modal = GAME_OVER_SCENE.instantiate()
 	add_child(go_modal)
 
+func trigger_victory() -> void:
+	victory_triggered = true
+	if ProgressoJogo:
+		ProgressoJogo.unlock_next_fase()
+		
+	var victory_modal = VICTORY_SCENE.instantiate()
+	add_child(victory_modal)
+
 # ==========================================================
 
 func tick_to_seconds(target_tick: int) -> float:
 	if bpm_events.size() == 0:
-		return target_tick * (60.0 / (120.0 * resolution)) # Padrão caso não tenha eventos
+		return target_tick * (60.0 / (120.0 * resolution))
 		
 	var last_ev = bpm_events[0]
 	for ev in bpm_events:
@@ -318,7 +362,6 @@ func load_chart_file(path: String) -> void:
 				bpm_events.append({"tick": tick, "bpm": bpm})
 			
 		elif section == "[EXPERTSINGLE]":
-			# 🟢 CASO 1: Linha de Nota Normal (N)
 			if " N " in line:
 				var parts = line.split(" ", false) 
 				var tick = int(parts[0])
@@ -329,13 +372,11 @@ func load_chart_file(path: String) -> void:
 					if not notes_by_tick.has(tick):
 						notes_by_tick[tick] = {}
 					
-					# Inicializa ou substitui garantindo os dados da gema
 					notes_by_tick[tick][lane] = {
 						"lane": lane,
 						"sustain_ticks": sustain_ticks
 					}
 			
-			# 🟡 CASO 2: Linha de Sustain Isolado (S)
 			elif " S " in line:
 				var parts = line.split(" ", false)
 				var tick = int(parts[0])
@@ -346,11 +387,9 @@ func load_chart_file(path: String) -> void:
 					if not notes_by_tick.has(tick):
 						notes_by_tick[tick] = {}
 					
-					# Se a nota já existir nessa lane, atualiza os ticks de cauda dela
 					if notes_by_tick[tick].has(lane):
 						notes_by_tick[tick][lane]["sustain_ticks"] = sustain_ticks
 					else:
-						# Se for um sustain órfão do arquivo, cria uma nota longa direta na pista certa!
 						notes_by_tick[tick][lane] = {
 							"lane": lane,
 							"sustain_ticks": sustain_ticks
@@ -358,7 +397,6 @@ func load_chart_file(path: String) -> void:
 
 	file.close()
 	
-	# Processar os BPMs para calcular os tempos exatos
 	bpm_events.sort_custom(func(a, b): return a["tick"] < b["tick"])
 	var current_time_sec = 0.0
 	var last_tick_bpm = 0
@@ -374,7 +412,6 @@ func load_chart_file(path: String) -> void:
 		last_tick_bpm = ev["tick"]
 		current_bpm_val = ev["bpm"]
 
-	# Truncar sustains que sobrepõem a próxima nota na mesma pista
 	var all_ticks = notes_by_tick.keys()
 	all_ticks.sort()
 	
@@ -396,10 +433,8 @@ func load_chart_file(path: String) -> void:
 			var note_data = notes_by_tick[tick][lane]
 			var ticks_finais = int(note_data["sustain_ticks"])
 			
-			# 1. TEMPO DE IMPACTO DA NOTA (Sincronizado perfeitamente com os BPMs)
 			var time_in_seconds = tick_to_seconds(tick) + song_start_delay
 			
-			# 2. DURAÇÃO DO SUSTAIN:
 			var sustain_duration = 0.0
 			if ticks_finais > 0:
 				sustain_duration = tick_to_seconds(tick + ticks_finais) - tick_to_seconds(tick)

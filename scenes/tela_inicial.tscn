@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://db7m8xvaj0pvs"]
+
+[ext_resource type="Script" uid="uid://dwr2m5o3cdvm1" path="res://scenes/tela_inicial.gd" id="1_script"]
+
+[node name="TelaInicial" type="Control" unique_id=899526722]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="." unique_id=877368742]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1569716193]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -150.0
+offset_right = 300.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
+
+[node name="Title" type="Label" parent="VBoxContainer" unique_id=498921358]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 80
+text = "GUITAR GODOT"
+horizontal_alignment = 1
+
+[node name="BtnJogar" type="Button" parent="VBoxContainer" unique_id=359210016]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Jogar"
+
+[node name="BtnSair" type="Button" parent="VBoxContainer" unique_id=945032318]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Sair"
+
+[connection signal="pressed" from="VBoxContainer/BtnJogar" to="." method="_on_btn_jogar_pressed"]
+[connection signal="pressed" from="VBoxContainer/BtnSair" to="." method="_on_btn_sair_pressed"]
