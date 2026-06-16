@@ -1,6 +1,6 @@
 # Dissecando o: `sistema_chart.gd`
 
-> **O que é este arquivo?** Ele é simplesmente O DEUS do jogo. Ele lê os arquivos de música, controla o ritmo, vomita as notas na tela na hora certa, checa se você acertou, e joga a tela de Game Over na sua cara. Se o Guitar Godot fosse uma orquestra, esse script seria o Maestro.
+> **O que é este arquivo?** Ele é simplesmente O coração do jogo. Ele lê os arquivos de música, controla o ritmo, vomita as notas na tela na hora certa, checa se você acertou, e joga a tela de Game Over na sua cara. Se o Guitar Godot fosse uma orquestra, esse script seria o Maestro.
 
 ## 1. O Relógio que Nunca Atrasa (AudioStreamPlayer)
 No mundo dos jogos rítmicos, usar matemática pra mover o tempo é a receita pro desastre, porque os processadores travam. O áudio, por outro lado, roda limpo na placa de som.
